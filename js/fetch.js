@@ -115,7 +115,7 @@ const DISCORD_LINK = 'https://discord.com/users/%id%';
 
 const getColorTag = (steamId) => {
   const colorTags = JSON.parse(localStorage.getItem('colorTags')) || {};
-  return colorTags[steamId] || '#ffffff';
+  return colorTags[steamId] || [];
 };
 
 export const renderPlayers = (players, search = false) => {
@@ -153,13 +153,23 @@ export const renderPlayers = (players, search = false) => {
       link.href = STEAM_LINK.replace('%id%', player.socials.steam);
       link.target = '_blank';
       link.innerHTML = '<img src="img/steam.svg" alt="Steam">';
-      link.style.color = getColorTag(player.socials.steam);
       socials.appendChild(link);
-      const color = getColorTag(player.socials.steam);
-      if (color !== '#ffffff') {
-        tr.style.backgroundColor = color; // Apply color to the row only if it's not white
+      const colors = getColorTag(player.socials.steam);
+      if (colors.length === 1) {
+        tr.style.backgroundColor = colors[0];
+      } else if (colors.length === 2) {
+        tr.style.background = `linear-gradient(90deg, ${colors[0]} 50%, ${colors[1]} 50%)`;
+      } else if (colors.length === 3) {
+        tr.style.background = `linear-gradient(90deg, ${colors[0]} 33.33%, ${colors[0]} 33.33%, ${colors[1]} 33.33%, ${colors[1]} 66.66%, ${colors[2]} 66.66%, ${colors[2]} 100%)`;
+      } else {
+        const percentage = 100 / colors.length;
+        const gradientColors = colors.map((color, index) => `${color} ${percentage * (index + 1)}%`).join(', ');
+        tr.style.background = `linear-gradient(90deg, ${gradientColors})`;
       }
+    } else {
+      tr.style.backgroundColor = ''; // Reset background color if no steam ID
     }
+
     if (player.socials.discord) {
       const link = document.createElement('a');
       link.href = DISCORD_LINK.replace('%id%', player.socials.discord);
