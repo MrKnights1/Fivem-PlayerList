@@ -114,7 +114,7 @@ const resetTable = () => {
 
 const getColorTag = (steamId) => {
   const colorTags = JSON.parse(localStorage.getItem('colorTags')) || {};
-  return colorTags[steamId] || [];
+  return Array.isArray(colorTags[steamId]) ? colorTags[steamId] : [];
 };
 
 export const renderPlayers = (players, search = false) => {
@@ -155,16 +155,18 @@ export const renderPlayers = (players, search = false) => {
       link.innerHTML = '<img src="img/steam.svg" alt="Steam">';
       socials.appendChild(link);
       const colors = getColorTag(player.socials.steam);
-      if (Array.isArray(colors) && colors.length === 1) {
+      if (colors.length === 1) {
         tr.style.backgroundColor = colors[0];
-      } else if (Array.isArray(colors) && colors.length === 2) {
+      } else if (colors.length === 2) {
         tr.style.background = `linear-gradient(90deg, ${colors[0]} 50%, ${colors[1]} 50%)`;
-      } else if (Array.isArray(colors) && colors.length === 3) {
+      } else if (colors.length === 3) {
         tr.style.background = `linear-gradient(90deg, ${colors[0]} 33.33%, ${colors[0]} 33.33%, ${colors[1]} 33.33%, ${colors[1]} 66.66%, ${colors[2]} 66.66%, ${colors[2]} 100%)`;
-      } else if (Array.isArray(colors)) {
+      } else if (colors.length > 3) {
         const percentage = 100 / colors.length;
         const gradientColors = colors.map((color, index) => `${color} ${percentage * (index + 1)}%`).join(', ');
         tr.style.background = `linear-gradient(90deg, ${gradientColors})`;
+      } else {
+        tr.style.backgroundColor = ''; // Reset background color if no valid colors
       }
     } else {
       tr.style.backgroundColor = ''; // Reset background color if no steam ID
