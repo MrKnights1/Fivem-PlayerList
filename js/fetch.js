@@ -118,18 +118,6 @@ const getColorTag = (steamId) => {
   return colorTags[steamId] || '#ffffff';
 };
 
-const saveColorTag = (steamId, color) => {
-  const colorTags = JSON.parse(localStorage.getItem('colorTags')) || {};
-  colorTags[steamId] = color;
-  localStorage.setItem('colorTags', JSON.stringify(colorTags));
-};
-
-const removeColorTag = (steamId) => {
-  const colorTags = JSON.parse(localStorage.getItem('colorTags')) || {};
-  delete colorTags[steamId];
-  localStorage.setItem('colorTags', JSON.stringify(colorTags));
-};
-
 export const renderPlayers = (players, search = false) => {
   if (!players) {
     console.error('No players data available to render.');
@@ -198,30 +186,3 @@ export const renderPlayers = (players, search = false) => {
         </tr>`;
   if (isSearching() && !search) serachPlayers();
 };
-
-// Event listener for applying color to multiple Steam IDs
-document.querySelector('#apply-color').addEventListener('click', () => {
-  const color = document.querySelector('#color-picker').value;
-  const steamIds = prompt('Enter Steam IDs to tag (comma-separated):');
-  if (steamIds) {
-    steamIds.split(',').map(id => id.trim()).forEach(steamId => {
-      if (steamId) {
-        saveColorTag(steamId, color);
-      }
-    });
-    renderPlayers(getPlayers());
-  }
-});
-
-// Event listener for removing color from a Steam ID
-document.querySelector('#remove-color').addEventListener('click', () => {
-  const steamId = prompt('Enter Steam ID to remove tag:');
-  if (steamId) {
-    removeColorTag(steamId);
-    renderPlayers(getPlayers());
-  }
-});
-
-// Example usage to apply color to a group
-//const group = ['76561199176934883', '76561198373825196'];
-//applyColorToGroup(group, '#00ff00');
