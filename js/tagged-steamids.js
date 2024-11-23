@@ -1,12 +1,3 @@
-const getColorTag = (steamId) => {
-  const colorTags = JSON.parse(localStorage.getItem('colorTags')) || {};
-  return colorTags[steamId] || '#ffffff';
-};
-
-const getGroupName = (color) => {
-  const groupNames = JSON.parse(localStorage.getItem('groupNames')) || {};
-  return groupNames[color] || '';
-};
 
 const saveColorTag = (steamId, color) => {
   const colorTags = JSON.parse(localStorage.getItem('colorTags')) || {};
@@ -52,7 +43,7 @@ const renderTaggedSteamIds = () => {
     const steamIds = groupedByColor[color];
     const colorRow = document.createElement('tr');
     const colorTd = document.createElement('td');
-    colorTd.colSpan = 3;
+    colorTd.colSpan = 4;
     colorTd.textContent = `Color: ${color} - Group: ${groupName}`;
     colorTd.style.backgroundColor = color;
     colorRow.appendChild(colorTd);
