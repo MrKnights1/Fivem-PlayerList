@@ -1,6 +1,11 @@
 const saveColorTag = (steamId, color) => {
   const colorTags = JSON.parse(localStorage.getItem('colorTags')) || {};
-  colorTags[steamId] = color;
+  if (!colorTags[steamId]) {
+    colorTags[steamId] = [];
+  }
+  if (!colorTags[steamId].includes(color)) {
+    colorTags[steamId].push(color);
+  }
   localStorage.setItem('colorTags', JSON.stringify(colorTags));
 };
 
@@ -11,10 +16,15 @@ const saveGroupName = (color, groupName) => {
   renderTaggedSteamIds();
 };
 
-const removeColorTag = (steamId) => {
+const removeColorTag = (steamId, color) => {
   const colorTags = JSON.parse(localStorage.getItem('colorTags')) || {};
-  delete colorTags[steamId];
-  localStorage.setItem('colorTags', JSON.stringify(colorTags));
+  if (colorTags[steamId]) {
+    colorTags[steamId] = colorTags[steamId].filter(c => c !== color);
+    if (colorTags[steamId].length === 0) {
+      delete colorTags[steamId];
+    }
+    localStorage.setItem('colorTags', JSON.stringify(colorTags));
+  }
 };
 
 const STEAM_PROFILE_URL = 'https://steamcommunity.com/profiles/%id%';
@@ -29,11 +39,13 @@ const renderTaggedSteamIds = () => {
 
   // Group Steam IDs by color
   Object.keys(colorTags).forEach((steamId) => {
-    const color = colorTags[steamId];
-    if (!groupedByColor[color]) {
-      groupedByColor[color] = [];
-    }
-    groupedByColor[color].push(steamId);
+    const colors = Array.isArray(colorTags[steamId]) ? colorTags[steamId] : [];
+    colors.forEach((color) => {
+      if (!groupedByColor[color]) {
+        groupedByColor[color] = [];
+      }
+      groupedByColor[color].push(steamId);
+    });
   });
 
   let rowIndex = 1; // Initialize row index counter
@@ -67,8 +79,16 @@ const renderTaggedSteamIds = () => {
       steamLinkTd.appendChild(steamLink);
 
       const colorTd = document.createElement('td');
-      colorTd.textContent = color;
-      colorTd.style.backgroundColor = color;
+      colorTd.textContent = colorTags[steamId].join('/');
+      if (colorTags[steamId].length === 1) {
+        colorTd.style.backgroundColor = colorTags[steamId][0];
+      } else if (colorTags[steamId].length === 2) {
+        colorTd.style.background = `linear-gradient(90deg, ${colorTags[steamId][0]} 50%, ${colorTags[steamId][1]} 50%)`;
+      } else if (colorTags[steamId].length === 3) {
+        colorTd.style.background = `linear-gradient(90deg, ${colorTags[steamId][0]} 33.33%, ${colorTags[steamId][0]} 33.33%, ${colorTags[steamId][1]} 33.33%, ${colorTags[steamId][1]} 66.66%, ${colorTags[steamId][2]} 66.66%, ${colorTags[steamId][2]} 100%)`;
+      } else {
+        colorTd.style.background = `linear-gradient(90deg, ${colorTags[steamId].join(', ')})`;
+      }
 
       const actionsTd = document.createElement('td');
       actionsTd.className = 'actions';
@@ -76,7 +96,7 @@ const renderTaggedSteamIds = () => {
       const removeButton = document.createElement('button');
       removeButton.textContent = 'Remove';
       removeButton.onclick = () => {
-        removeColorTag(steamId);
+        removeColorTag(steamId, color);
         renderTaggedSteamIds();
       };
 
