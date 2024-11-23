@@ -1,12 +1,15 @@
-import { setServerInfo, setTitle } from './server.js';
-import { getDiscordId, getSteamId } from './utils/user.js';
+import { setTitle, setServerInfo } from './server.js';
+import { getSteamId, getDiscordId } from './utils/user.js';
 import { isSearching, serachPlayers } from './serach.js';
 
-const refreshButton = document.querySelector('#refresh-button');
-const refreshTimer = document.querySelector('#refresh-timer');
+const STEAM_LINK = 'https://steamcommunity.com/profiles/%id%';
+const DISCORD_LINK = 'https://discord.com/users/%id%';
+
 let currentPlayers = [];
 let fetcher;
 let seconds = 30;
+const refreshButton = document.querySelector('#refresh-button');
+const refreshTimer = document.querySelector('#refresh-timer');
 
 export const getPlayers = () => currentPlayers;
 
@@ -42,19 +45,6 @@ export const fetchServer = (serverId) => {
     .catch((error) => console.error('Fetching server data failed:', error));
 };
 
-const startFetcher = (serverId) => {
-  console.log(`Starting fetcher at ${seconds} seconds`);
-  if (fetcher) clearInterval(fetcher);
-  fetcher = setInterval(() => {
-    refreshTimer.textContent = seconds + 's';
-    if (seconds < 1) {
-      clearInterval(fetcher);
-      fetchServer(serverId);
-    }
-    seconds--;
-  }, 1000);
-};
-
 const fetchPlayers = (url, playersFetch = false) => {
   console.info('Fetching players with method:', playersFetch ? 'players.json' : 'normal', url);
   fetch(url, {
@@ -81,6 +71,19 @@ const fetchPlayers = (url, playersFetch = false) => {
     .catch((error) => console.error('Fetching players data failed:', error));
 };
 
+const startFetcher = (serverId) => {
+  console.log(`Starting fetcher at ${seconds} seconds`);
+  if (fetcher) clearInterval(fetcher);
+  fetcher = setInterval(() => {
+    refreshTimer.textContent = seconds + 's';
+    if (seconds < 1) {
+      clearInterval(fetcher);
+      fetchServer(serverId);
+    }
+    seconds--;
+  }, 1000);
+};
+
 const formatPlayers = (players) => {
   const formattedPlayers = [];
   players.forEach((player) => {
@@ -104,14 +107,10 @@ const formatPlayers = (players) => {
   return formattedPlayers.sort((a, b) => a.id - b.id);
 };
 
-const table = document.querySelector('table');
-
 const resetTable = () => {
+  const table = document.querySelector('table');
   [...table.querySelectorAll('tr')].filter((tr) => tr.id !== 'table-header').forEach((tr) => tr.remove());
 };
-
-const STEAM_LINK = 'https://steamcommunity.com/profiles/%id%';
-const DISCORD_LINK = 'https://discord.com/users/%id%';
 
 const getColorTag = (steamId) => {
   const colorTags = JSON.parse(localStorage.getItem('colorTags')) || {};
@@ -124,6 +123,7 @@ export const renderPlayers = (players, search = false) => {
     return;
   }
 
+  const table = document.querySelector('table');
   resetTable();
 
   console.info('Rendering new players', players.length);
@@ -192,7 +192,62 @@ export const renderPlayers = (players, search = false) => {
             <td rowspan="5">
                 <span>This page is not affiliated with FiveM or any other server.</span><br />
                 <span>Created by <a href="https://github.com/igorovh" target="_blank">igorovh</a>.</span>
-            </th>
+            </td>
         </tr>`;
   if (isSearching() && !search) serachPlayers();
 };
+
+document.addEventListener('DOMContentLoaded', () => {
+  const refreshButton = document.querySelector('#refresh-button');
+  const refreshTimer = document.querySelector('#refresh-timer');
+  let currentPlayers = [];
+  let fetcher;
+  let seconds = 30;
+
+  const startFetcher = (serverId) => {
+    console.log(`Starting fetcher at ${seconds} seconds`);
+    if (fetcher) clearInterval(fetcher);
+    fetcher = setInterval(() => {
+      refreshTimer.textContent = seconds + 's';
+      if (seconds < 1) {
+        clearInterval(fetcher);
+        fetchServer(serverId);
+      }
+      seconds--;
+    }, 1000);
+  };
+
+  const formatPlayers = (players) => {
+    const formattedPlayers = [];
+    players.forEach((player) => {
+      const socials = {};
+
+      if (player.identifiers) {
+        const steamIdentifier = getSteamId(player.identifiers);
+        if (steamIdentifier) socials.steam = steamIdentifier;
+
+        const discordIdentifier = getDiscordId(player.identifiers);
+        if (discordIdentifier) socials.discord = discordIdentifier;
+      }
+
+      formattedPlayers.push({
+        name: player.name,
+        id: player.id,
+        socials,
+        ping: player.ping,
+      });
+    });
+    return formattedPlayers.sort((a, b) => a.id - b.id);
+  };
+
+  const table = document.querySelector('table');
+
+  const resetTable = () => {
+    [...table.querySelectorAll('tr')].filter((tr) => tr.id !== 'table-header').forEach((tr) => tr.remove());
+  };
+
+  const getColorTag = (steamId) => {
+    const colorTags = JSON.parse(localStorage.getItem('colorTags')) || {};
+    return colorTags[steamId] || [];
+  };
+});
