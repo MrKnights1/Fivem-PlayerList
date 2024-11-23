@@ -27,6 +27,8 @@ const removeColorTag = (steamId) => {
   localStorage.setItem('colorTags', JSON.stringify(colorTags));
 };
 
+const STEAM_PROFILE_URL = 'https://steamcommunity.com/profiles/%id%';
+
 const renderTaggedSteamIds = () => {
   const taggedSteamIdsTableBody = document.querySelector('#tagged-steamids-table tbody');
   const colorTags = JSON.parse(localStorage.getItem('colorTags')) || {};
@@ -62,6 +64,13 @@ const renderTaggedSteamIds = () => {
       const steamIdTd = document.createElement('td');
       steamIdTd.textContent = steamId;
 
+      const steamLinkTd = document.createElement('td');
+      const steamLink = document.createElement('a');
+      steamLink.href = STEAM_PROFILE_URL.replace('%id%', steamId);
+      steamLink.target = '_blank';
+      steamLink.innerHTML = '<img src="img/steam.svg" alt="Steam" style="width: 22px;">';
+      steamLinkTd.appendChild(steamLink);
+
       const colorTd = document.createElement('td');
       colorTd.textContent = color;
       colorTd.style.backgroundColor = color;
@@ -79,6 +88,7 @@ const renderTaggedSteamIds = () => {
       actionsTd.appendChild(removeButton);
 
       tr.appendChild(steamIdTd);
+      tr.appendChild(steamLinkTd);
       tr.appendChild(colorTd);
       tr.appendChild(actionsTd);
 
@@ -99,13 +109,11 @@ document.querySelector('#apply-color').addEventListener('click', () => {
 });
 
 document.querySelector('#remove-color').addEventListener('click', () => {
-  const steamIds = document.querySelector('#steam-id-input').value.trim().split('\n');
-  steamIds.forEach(steamId => {
-    if (steamId) {
-      removeColorTag(steamId.trim());
-    }
-  });
-  renderTaggedSteamIds();
+  const steamId = document.querySelector('#steam-id-input').value.trim();
+  if (steamId) {
+    removeColorTag(steamId);
+    renderTaggedSteamIds();
+  }
 });
 
 document.querySelector('#apply-group-name').addEventListener('click', () => {
@@ -113,6 +121,12 @@ document.querySelector('#apply-group-name').addEventListener('click', () => {
   const groupName = document.querySelector('#group-name-input').value.trim();
   if (color && groupName) {
     saveGroupName(color, groupName);
+  }
+});
+
+window.addEventListener('storage', (event) => {
+  if (event.key === 'colorTags' || event.key === 'groupNames') {
+    renderTaggedSteamIds();
   }
 });
 
