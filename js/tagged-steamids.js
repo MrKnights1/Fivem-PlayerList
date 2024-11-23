@@ -99,14 +99,6 @@ document.querySelector('#apply-color').addEventListener('click', () => {
   renderTaggedSteamIds();
 });
 
-document.querySelector('#remove-color').addEventListener('click', () => {
-  const steamId = document.querySelector('#steam-id-input').value.trim();
-  if (steamId) {
-    removeColorTag(steamId);
-    renderTaggedSteamIds();
-  }
-});
-
 document.querySelector('#apply-group-name').addEventListener('click', () => {
   const color = document.querySelector('#color-picker').value;
   const groupName = document.querySelector('#group-name-input').value.trim();
