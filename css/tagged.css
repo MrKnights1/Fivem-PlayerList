@@ -10,6 +10,55 @@ body {
     color: white;
 }
 
+#steam-id-input {
+    width: 400px;
+    height: 150px;
+    background: #232323;
+    border: 1px solid #1E1E1E;
+    color: white;
+    font-size: 16px;
+    font-family: 'Mulish', sans-serif;
+    padding: 8px;
+    box-sizing: border-box;
+    resize: none;
+    margin-bottom: 8px;
+}
+
+#buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#input-buttons-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+#steam-id-input::placeholder {
+    color: #939393;
+}
+
+button {
+    background: #1E1E1E;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    font-family: 'Mulish', sans-serif;
+    margin: 4px 0;
+}
+
+button:hover {
+    background: #252525;
+}
+
+button:active {
+    background: #2e2e2e;
+}
+
 #wrapper {
     width: 75%;
     font-family: 'Mulish', sans-serif;

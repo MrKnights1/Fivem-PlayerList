@@ -18,13 +18,17 @@
  </header>
  <section>
   <div id="color-picker-container">
-   <input type="color" id="color-picker" value="#ff0000" />
-   <textarea id="steam-id-input" placeholder="Enter Steam IDs (one per line)"></textarea>
-   <button id="apply-color">Add</button>
-   <input type="text" id="group-name-input" placeholder="Enter Group Name" />
-   <button id="apply-group-name">Apply Group Name</button>
+    <input type="color" id="color-picker" value="#ff0000" />
+    <div id="input-buttons-container">
+      <textarea id="steam-id-input" placeholder="Enter Steam IDs (one per line)"></textarea>
+      <div id="buttons">
+        <button id="apply-color">Add</button>
+        <input type="text" id="group-name-input" placeholder="Enter Group Name" />
+        <button id="apply-group-name">Apply Group Name</button>
+      </div>
+    </div>
   </div>
- </section>
+</section>
  <div id="main-content">
   <div id="tagged-steamids-wrapper">
    <h2>Tagged Steam IDs</h2>
