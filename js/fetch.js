@@ -157,14 +157,6 @@ export const renderPlayers = (players, search = false) => {
       const colors = getColorTag(player.socials.steam);
       if (colors.length === 1) {
         tr.style.backgroundColor = colors[0];
-      } else if (colors.length === 2) {
-        tr.style.background = `linear-gradient(90deg, ${colors[0]} 50%, ${colors[1]} 50%)`;
-      } else if (colors.length === 3) {
-        tr.style.background = `linear-gradient(90deg, ${colors[0]} 33.33%, ${colors[0]} 33.33%, ${colors[1]} 33.33%, ${colors[1]} 66.66%, ${colors[2]} 66.66%, ${colors[2]} 100%)`;
-      } else if (colors.length > 3) {
-        const percentage = 100 / colors.length;
-        const gradientColors = colors.map((color, index) => `${color} ${percentage * (index + 1)}%`).join(', ');
-        tr.style.background = `linear-gradient(90deg, ${gradientColors})`;
       } else {
         tr.style.backgroundColor = ''; // Reset background color if no valid colors
       }
