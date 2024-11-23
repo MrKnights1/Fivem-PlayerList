@@ -10,6 +10,21 @@ body {
     color: white;
 }
 
+
+#color-picker, #color-hex {
+    width: 198px; /* Set the desired width */
+    height: 36px; /* Set the desired height */
+    background: #232323;
+    border: 1px solid #1E1E1E;
+    color: white;
+    font-size: 16px;
+    font-family: 'Mulish', sans-serif;
+    padding: 4px 4px;
+    box-sizing: border-box;
+    display: inline-block; /* Ensure they are inline elements */
+    vertical-align: middle; /* Align them vertically */
+}
+
 #steam-id-input {
     width: 400px;
     height: 150px;

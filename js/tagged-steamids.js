@@ -1,4 +1,3 @@
-
 const saveColorTag = (steamId, color) => {
   const colorTags = JSON.parse(localStorage.getItem('colorTags')) || {};
   colorTags[steamId] = color;
@@ -88,8 +87,21 @@ const renderTaggedSteamIds = () => {
   });
 };
 
+const colorPicker = document.querySelector('#color-picker');
+const colorHex = document.querySelector('#color-hex');
+
+colorPicker.addEventListener('input', () => {
+  colorHex.value = colorPicker.value;
+});
+
+colorHex.addEventListener('input', () => {
+  if (/^#[0-9A-F]{6}$/i.test(colorHex.value)) {
+    colorPicker.value = colorHex.value;
+  }
+});
+
 document.querySelector('#apply-color').addEventListener('click', () => {
-  const color = document.querySelector('#color-picker').value;
+  const color = colorPicker.value;
   const steamIds = document.querySelector('#steam-id-input').value.trim().split('\n');
   steamIds.forEach(steamId => {
     if (steamId) {
@@ -100,7 +112,7 @@ document.querySelector('#apply-color').addEventListener('click', () => {
 });
 
 document.querySelector('#apply-group-name').addEventListener('click', () => {
-  const color = document.querySelector('#color-picker').value;
+  const color = colorPicker.value;
   const groupName = document.querySelector('#group-name-input').value.trim();
   if (color && groupName) {
     saveGroupName(color, groupName);
