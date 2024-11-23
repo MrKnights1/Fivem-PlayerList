@@ -155,11 +155,11 @@ export const renderPlayers = (players, search = false) => {
       link.innerHTML = '<img src="img/steam.svg" alt="Steam">';
       socials.appendChild(link);
       const colors = getColorTag(player.socials.steam);
-      if (colors.length === 1) {
+      if (Array.isArray(colors) && colors.length === 1) {
         tr.style.backgroundColor = colors[0];
-      } else if (colors.length === 2) {
+      } else if (Array.isArray(colors) && colors.length === 2) {
         tr.style.background = `linear-gradient(90deg, ${colors[0]} 50%, ${colors[1]} 50%)`;
-      } else if (colors.length === 3) {
+      } else if (Array.isArray(colors) && colors.length === 3) {
         tr.style.background = `linear-gradient(90deg, ${colors[0]} 33.33%, ${colors[0]} 33.33%, ${colors[1]} 33.33%, ${colors[1]} 66.66%, ${colors[2]} 66.66%, ${colors[2]} 100%)`;
       } else if (Array.isArray(colors)) {
         const percentage = 100 / colors.length;
