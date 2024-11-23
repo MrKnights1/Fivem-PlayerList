@@ -34,6 +34,20 @@ header {
     flex-grow: 1;
 }
 
+/* Add this to css/index.css */
+.icon img {
+  width: 22px;
+}
+
+.icon:hover {
+  background: #252525;
+  cursor: pointer;
+}
+
+.icon:active {
+  background: #2e2e2e;
+}
+
 header img {
     width: 64px;
 }
