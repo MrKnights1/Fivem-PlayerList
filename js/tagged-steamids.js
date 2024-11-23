@@ -36,13 +36,15 @@ const renderTaggedSteamIds = () => {
     groupedByColor[color].push(steamId);
   });
 
+  let rowIndex = 1; // Initialize row index counter
+
   // Render grouped Steam IDs
   Object.keys(groupedByColor).forEach((color) => {
     const groupName = groupNames[color] || '';
     const steamIds = groupedByColor[color];
     const colorRow = document.createElement('tr');
     const colorTd = document.createElement('td');
-    colorTd.colSpan = 4;
+    colorTd.colSpan = 5; // Adjust colspan to match the number of columns
     colorTd.textContent = `Color: ${color} - Group: ${groupName}`;
     colorTd.style.backgroundColor = color;
     colorRow.appendChild(colorTd);
@@ -50,6 +52,9 @@ const renderTaggedSteamIds = () => {
 
     steamIds.forEach((steamId) => {
       const tr = document.createElement('tr');
+
+      const noTd = document.createElement('td');
+      noTd.textContent = rowIndex++ + '.'; // Set row number with a period
 
       const steamIdTd = document.createElement('td');
       steamIdTd.textContent = steamId;
@@ -77,6 +82,7 @@ const renderTaggedSteamIds = () => {
 
       actionsTd.appendChild(removeButton);
 
+      tr.appendChild(noTd);
       tr.appendChild(steamIdTd);
       tr.appendChild(steamLinkTd);
       tr.appendChild(colorTd);

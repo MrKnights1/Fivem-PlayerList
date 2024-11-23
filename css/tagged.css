@@ -209,6 +209,10 @@ table tr:nth-child(odd) td {
     width: 10%;
 }
 
+.table-no {
+    width: 10%;
+}
+
 .table-actions {
     width: 10%;
 }
