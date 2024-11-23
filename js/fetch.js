@@ -118,7 +118,7 @@ const getColorTag = (steamId) => {
 };
 
 export const renderPlayers = (players, search = false) => {
-  if (!players) {
+  if (!players || players.length === 0) {
     console.error('No players data available to render.');
     return;
   }
@@ -188,6 +188,7 @@ export const renderPlayers = (players, search = false) => {
 
     table.appendChild(tr);
   });
+
   // Footer
   table.innerHTML += `
         <tr class="table-footer" style="background: #171717">
@@ -198,7 +199,6 @@ export const renderPlayers = (players, search = false) => {
         </tr>`;
   if (isSearching() && !search) serachPlayers();
 };
-
 document.addEventListener('DOMContentLoaded', () => {
   const refreshButton = document.querySelector('#refresh-button');
   const refreshTimer = document.querySelector('#refresh-timer');
