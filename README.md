@@ -1,7 +1,6 @@
 # fivem-player-list
 
-Simple website that will dipslay you all players connected to selected sever.
-It is available here: [https://igorovh.github.io/fivem-player-list/](https://igorovh.github.io/fivem-player-list/)
+Simple website that will display you all players connected to selected sever.
 
 It is using FiveM endpoint, which is used in their UI:
 
